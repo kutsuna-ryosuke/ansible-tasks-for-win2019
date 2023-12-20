@@ -1,0 +1,9 @@
+---
+- hosts: all
+
+  roles:
+    - basic
+    - users
+    - localsecuritypolicy
+    - localgrouppolicy
+    - reboot

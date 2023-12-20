@@ -1,0 +1,35 @@
+# ホスト名設定
+- name: set hostname
+  win_hostname:
+    name: wt1234s
+
+## Timezone設定(エラー原因調査中)
+#- name: set timezone
+#  win_timezone:
+#    timezone: Tokyo Standard Time
+
+# 名前解決用DNS指定
+- name: set DNS for resolver.
+  win_dns_client:
+    ipv4_addresses: 169.254.169.123
+
+# 時刻同期間隔修正
+# HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpClinet: 86400(10)
+# (エラー原因調査中)
+#- name: set interval sync time.
+#  win_regedit:
+#    path: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpClient
+#    name: NtpClient
+#    data: 86400
+#    type: dword
+
+# システムプロキシの設定
+- name: set a proxy
+  win_http_proxy:
+    proxy: proxy.example.com:8080
+
+# IEのプロキシ設定
+- name: set a proxy for ie
+  win_inet_proxy:
+    auto_detect: no
+    proxy: proxy.example.com:8080

@@ -1,0 +1,8 @@
+# ローカルグループポリシー
+## computerの構成
+### 管理用テンプレート
+#### Windowsリモート管理(WinRM)
+# WinRMによるリモートサーバ管理を許可する: 有効(IPv4フィルタ:*, IPv6フィルタ:空欄)
+# CredSSp認証を許可する: 有効
+#### Microsoft Defender ウィルス対策
+# Microsoft Defenderウィルスを無効にします: 有効

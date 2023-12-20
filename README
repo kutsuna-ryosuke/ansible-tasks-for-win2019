@@ -1,0 +1,10 @@
+Windows Serverの基本的な部分をすべて設定できるAnsible Playbookを目指す。
+
+Playbookで、該当部分をコメントアウトして値を入れて実行すれば設定ができるはず。
+
+Features:
+  * Windows Server 2019
+
+References:
+* セキュリティ ポリシー設定のリファレンス
+  https://learn.microsoft.com/ja-jp/windows/security/threat-protection/security-policy-settings/security-policy-settings-reference

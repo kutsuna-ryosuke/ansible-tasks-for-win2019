@@ -1,0 +1,166 @@
+### Local Security Policy
+
+# [アカウントポリシー]
+# アカウントポリシー/パスワードのポリシー/パスワードの最小字数の監査
+# アカウントポリシー/パスワードのポリシー/パスワードの長さ
+- name: set lenght of password
+  win_security_policy:
+    section: System Access
+    key: MinimumPasswordLength
+    value: 12
+
+# アカウントポリシー/パスワードのポリシー/パスワードの変更禁止期間
+
+# アカウントポリシー/パスワードのポリシー/パスワードの有効期間= 104日
+- name: set days password expired
+  win_security_policy:
+    section: System Access
+    key: MaximumPasswordAge
+    value: 104
+
+# アカウントポリシー/パスワードのポリシー/パスワードの履歴を記録する=5
+- name: set date of history password
+  win_security_policy:
+    section: System Access
+    key: PasswordHistorySize
+    value: 5
+
+# アカウントポリシー/パスワードのポリシー/暗号化を元に戻せる状態でパスワードを保存する
+#
+# アカウントポリシー/パスワードのポリシー/複雑さの要件を満たす必要があるパスワード
+- name: set complex of password
+  win_security_policy:
+    section: System Access
+    key: PasswordComplexity
+    value: 1
+
+# アカウントポリシー/アカウントロックアウトのポリシー/アカウントのロックアウトのしきい値
+# アカウントポリシー/アカウントロックアウトのポリシー/ロックアウトカウンターのリセット
+# アカウントポリシー/アカウントロックアウトのポリシー/ロックアウト期間
+# アカウントポリシー/アカウントロックアウトのポリシー/管理者のアカウントロックアウトを許可する
+
+# [ローカルポリシー]
+## 監査ポリシー
+#
+# 未定義:0
+# 成功:1
+# 失敗:2
+# 成功失敗:3
+
+# ロカールポリシー/監査ポリシー/アカウントログオンイベントの監査=成功、失敗
+- name: set AuditAccountLogon
+  win_security_policy:
+    section: Event Audit
+    key: AuditAccountLogon
+    value: 3
+
+# ロカールポリシー/監査ポリシー/アカウント管理の監査=成功、失敗
+- name: set AuditAccountManage
+  win_security_policy:
+    section: Event Audit
+    key: AuditAccountManage
+    value: 3
+
+# ロカールポリシー/監査ポリシー/オブジェクトアクセスの監査=成功、失敗
+- name: set AuditObjectAccess
+  win_security_policy:
+    section: Event Audit
+    key: AuditObjectAccess
+    value: 3
+
+# ロカールポリシー/監査ポリシー/システムイベントの監査
+# ロカールポリシー/監査ポリシー/ディレクトリサービスのアクセスの監査
+# ロカールポリシー/監査ポリシー/プロセス追跡の監査
+# ロカールポリシー/監査ポリシー/ポリシーの変更の監査
+# ロカールポリシー/監査ポリシー/ログオンイベントの監査
+# ロカールポリシー/監査ポリシー/特権使用の監査
+
+## ユーザ権利の割り当て
+
+# サービスとしてのログオン: ddagentuser 追加
+- name: set SeServiceLogonRight 
+  win_user_right:
+    name: SeServiceLogonRight 
+    users: 
+      - ddagentuser
+    action: add
+
+# ネットワーク経由のアクセスを拒否: ddagentuser 追加
+- name: set SeDenyNetworkLogonRight 
+  win_user_right:
+    name: SeDenyNetworkLogonRight 
+    users: 
+      - ddagentuser
+    action: add
+
+# バッチジョブとしてログオン: 
+- name: set SeDenyBatchLogonRight 
+  win_user_right:
+    name: SeDenyBatchLogonRight 
+    users: 
+      - ddagentuser
+    action: add
+
+# リモートデスクトップサービスを使ったログオンを許可
+- name: set SeRemoteInteractiveLogonRight 
+  win_user_right:
+    name: SeRemoteInteractiveLogonRight 
+    users: 
+      - cloudadmin
+    action: add
+
+# ローカルログオンを拒否: ddagentuser 追加
+- name: set SeDenyRemoteInteractiveLogonRight
+  win_user_right:
+    name: SeDenyRemoteInteractiveLogonRight 
+    users: 
+      - ddagentuser
+    action: add
+
+# 走査チェックのバイパス
+- name: set SeChangeNotifyPrivilege 
+  win_user_right:
+    name: SeChangeNotifyPrivilege 
+    users: 
+      - cloudadmin
+    action: add
+
+# 同じセッションで別のユーザの偽装トークンを取得します
+- name: set SeDelegateSessionUserImpersonatePrivilege 
+  win_user_right:
+    name: SeDelegateSessionUserImpersonatePrivilege 
+    users: 
+      - cloudadmin
+    action: add
+
+
+## セキュリティオプション
+# アカウント: Administratorアカウントの状態: 無効
+- name: set EnableAdminAccount 
+  win_security_policy:
+    section: System Access
+    key: EnableAdminAccount 
+    value: 1
+
+# シャットダウン: システムのシャットダウンにログオンを必要としない: 無効
+- name: set ShutdownWithoutLogon
+  win_security_policy:
+    section: Registry Values
+    key: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ShutdownWithoutLogon
+    value: 4,0
+
+# ネットワークアクセス: SAMアカウントおよびj共有の匿名の列挙を許可しない
+
+# ネットワークセキュリティ: LAN Manager認証レベル: NTLMv2応答のみ送信(LMとNTLMを拒否する)
+- name: set HKLM\SYSTEM\CurrentControlSet\Control\Lsa\
+  win_regedit:
+    path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
+    name: LmCompatibilityLevel
+    data: 5
+    type: dword
+
+
+# ユーザカウント制御: ビルトインAdministratorアカウントのための管理者承認モード: 無効
+# ユーザアカウント制御: 管理者承認モードですべての管理者を実行する: 無効
+# ユーザアカウント制御: 管理者承認モードでの管理者に対する昇格時のプロンプトの動作: 確認を要求しないで昇格する
+# ユーザアカウント制御: 昇格のプロンプト時にセキュリティで保護されたデスクトップに切り替える: 無効

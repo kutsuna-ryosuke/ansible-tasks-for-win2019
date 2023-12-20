@@ -1,0 +1,27 @@
+- name: create user user-001
+  win_user:
+    name: user-001
+    password: P@ssw0rD-001
+    password_expired: false
+    user_cannot_change_password: false
+    password_never_expires: true
+    account_disabled: false
+    account_locked: false
+    state: present
+    groups:
+      - Users
+      - Administrators
+
+- name: create user user-002
+  win_user:
+    name: user-002
+    password: P@ssw0rD-002
+    password_expired: false
+    user_cannot_change_password: false
+    password_never_expires: true
+    account_disabled: false
+    account_locked: false
+    state: present
+    groups:
+      - Users
+      - Administrators
